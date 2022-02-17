@@ -5,17 +5,14 @@ Created on Sat Dec 11 14:25:11 2021
 
 @author: cynding
 """
-# %% Web scrapping - Selenium
+# %% Web scrapping - initialization
 
-# Step 1 - Install and imports
+# Step 1 - Import
 from selenium import webdriver
 import pandas as pd
 import re
 
-df = pd.DataFrame(columns=['Customer','Member_Type','Traveler_Type','Date','Review','Total_Score',
-                           'Cleanliness','Dining','Location','Service','Amenities','Value_for_Money', 'Hotel'])
-
-# Step 2 - Install and access WebDriver
+# Step 2 - Access WebDriver
 driver = webdriver.Chrome('/Users/cynding/Downloads/chromedriver 2')
 
 hotel_list = ('sfoac-fairfield-inn-and-suites-napa-american-canyon', 
@@ -25,7 +22,10 @@ hotel_list = ('sfoac-fairfield-inn-and-suites-napa-american-canyon',
               'avlac-ac-hotel-asheville-downtown',
               'abits-towneplace-suites-abilene-northeast') 
 
-# %%
+# %% Web scrapping
+
+df = pd.DataFrame(columns=['Customer','Member_Type','Traveler_Type','Date','Review','Total_Score',
+                           'Cleanliness','Dining','Location','Service','Amenities','Value_for_Money', 'Hotel'])
 
 for i in range(len(hotel_list)):
     url = 'https://www.marriott.com/hotels/hotel-reviews/' + hotel_list[i] + '/'
@@ -58,7 +58,7 @@ for i in range(len(hotel_list)):
             except:
                 readmore = False
     
-        # extract the information
+        # extract the critical information
         for i in range(len(driver.find_elements_by_xpath('//div[@class="BVRRContentReview BVRRDisplayContentReview BVDIContentNative BVRRContentReviewNative BVRRDisplayContentReviewEven BVRREven"]'))):
             review_info = driver.find_elements_by_xpath('//div[@class="BVRRContentReview BVRRDisplayContentReview BVDIContentNative BVRRContentReviewNative BVRRDisplayContentReviewEven BVRREven"]')[i].text
             temp_series = pd.Series(review_info)
@@ -176,7 +176,7 @@ for i in range(len(hotel_list)):
     
     temp_df['Hotel'] = hotel_name
     df = df.append(temp_df)
-df.shape
+
 
 # %%
 
